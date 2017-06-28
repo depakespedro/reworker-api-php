@@ -1,6 +1,6 @@
 <?php
 
-namespace Depakespedro\Grastin;
+namespace Depakespedro\Reworker;
 
 class ReworkerOrder
 {
