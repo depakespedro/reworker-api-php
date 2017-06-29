@@ -95,12 +95,17 @@ class ReworkerOrder
         $this->args['order_product_sku'] = '';
         $this->args['order_product_count'] = '';
         $this->args['order_product_price'] = '';
-
+        
         foreach ($products as $product){
             $this->args['order_product_sku'] .= $product->get_sku() . ',';
             $this->args['order_product_count'] .= $product->get_count() . ',';
             $this->args['order_product_price'] .= $product->get_price() . ',';
         }
+
+        $this->args['order_product_sku'] = substr($this->args['order_product_sku'], 0, -1);
+        $this->args['order_product_count'] = substr($this->args['order_product_count'], 0, -1);
+        $this->args['order_product_price'] = substr($this->args['order_product_price'], 0, -1);
+        
         return $this;
     }
 
