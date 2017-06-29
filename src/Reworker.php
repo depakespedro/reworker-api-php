@@ -8,6 +8,9 @@ class Reworker
     private $reworker_client_id = '';
     private $reworker_client_key = '';
 
+    private $error_message = '';
+    private $raw_response = '';
+
     public function __construct($client_id, $client_key)
     {
         $this->reworker_client_id = $client_id;
@@ -31,16 +34,35 @@ class Reworker
             curl_close($curl);
         }
 
+        $this->raw_response = $response;
+
         try{
             $response = json_decode($response);
         }catch (\Exception $e){
+            $this->error_message = 'Error parse response : '.$response;
             return false;
         }
 
         if($response->result == 'success'){
             return $response->order_id;
+        }elseif($response->result == 'fail'){
+            $this->error_message = 'Error response : '.$response->error;
+            return false;
         }else{
+            $this->error_message = 'Error response!';
             return false;
         }
     }
+
+    public function getRawResponse()
+    {
+        return $this->raw_response;
+    }
+
+
+    public function getErrorMessage()
+    {
+        return $this->error_message;
+    }
+
 }
