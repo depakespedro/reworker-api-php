@@ -5,6 +5,11 @@ namespace Depakespedro\Reworker;
 class ReworkerOrder
 {
     private $args = [];
+    
+    public function __construct($id = null)
+    {
+        $this->args['id'] = $id;
+    }
 
     public function set_reworker_shop_id($reworker_shop_id)
     {
@@ -112,5 +117,10 @@ class ReworkerOrder
     public function get_args()
     {
         return $this->args;
+    }
+    
+    public function get($var)
+    {
+        return isset($this->args[$var]) ? $this->args[$var] : null;
     }
 }
