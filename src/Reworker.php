@@ -40,17 +40,17 @@ class Reworker
             $response = json_decode($response);
         }catch (\Exception $e){
             $this->error_message = 'Error parse response : '.$response;
-            return false;
+            return null;
         }
 
         if($response->result == 'success'){
-            return $response->order_id;
+            return new ReworkerOrder($response->order_id);
         }elseif($response->result == 'fail'){
             $this->error_message = 'Error response : '.$response->error;
-            return false;
+            return null;
         }else{
             $this->error_message = 'Error response!';
-            return false;
+            return null;
         }
     }
 
