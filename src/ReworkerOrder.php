@@ -11,6 +11,21 @@ class ReworkerOrder
         $this->args['id'] = $id;
     }
 
+    public function  set_state($id)
+    {
+        $this->args['state'] = $id;
+    }
+
+    public function set_order_id($id)
+    {
+        $this->args['id'] = $id;
+    }
+
+    public function set_out_order_id($id)
+    {
+        $this->args['out_order_id'] = $id;
+    }
+
     public function set_reworker_shop_id($reworker_shop_id)
     {
         $this->args['reworker_shop_id'] = $reworker_shop_id;

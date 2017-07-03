@@ -54,6 +54,56 @@ class Reworker
         }
     }
 
+    public function getStateOrders(array $reworker_orders)
+    {
+        $orders_ids = '';
+        foreach($reworker_orders as $order){
+            $orders_ids .= $order->get('id') . ',';
+        }
+
+        $orders_ids = substr($orders_ids, 0, -1);
+
+        $data = [];
+        $data['reworker_client_id'] = $this->reworker_client_id;
+        $data['order_ids'] = $orders_ids;
+
+        $data = http_build_query($data, '', '&');
+
+        if( $curl = curl_init() ) {
+            curl_setopt($curl, CURLOPT_URL, 'http://reworker.ru/clients/api/lead_status.php');
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_POST, true);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+            $response = curl_exec($curl);
+            curl_close($curl);
+        }
+
+        $this->raw_response = $response;
+
+        try{
+            $response = json_decode($response);
+        }catch (\Exception $e){
+            $this->error_message = 'Error parse response : '.$response;
+            return null;
+        }
+
+        if(isset($response->order_statuses)){
+            $this->error_message = 'Error response : '.$response->order_statuses;
+            return null;
+        }
+
+        $reworker_orders = [];
+        foreach ($response as $order){
+            $reworker_order = new ReworkerOrder($order->order_id);
+            $reworker_order->set_out_order_id($order->order_source_id);
+            $reworker_order->set_state($order->order_status_code);
+
+            $reworker_orders[] = $reworker_order;
+        }
+
+        return $reworker_orders;
+    }
+
     public function getRawResponse()
     {
         return $this->raw_response;
